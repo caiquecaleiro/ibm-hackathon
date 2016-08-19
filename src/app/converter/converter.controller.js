@@ -12,7 +12,7 @@
     vm.submitAction = submitAction;
     vm.url = '';
     vm.keyword = '';
-    vm.videos = null;
+    vm.videos = [];
 
     function submitAction(url, keywords) {
       console.log(keywords.split(','));
@@ -20,6 +20,12 @@
     }
 
     function createVideos(data) {
+      //Test
+      var video = new Video('https://www.youtube.com/',
+        'test1',
+        'http://i.ytimg.com/vi/ZKOtE9DOwGE/mqdefault.jpg',
+        '3:00');
+      vm.videos.push(video);
       //
       // converterService.getData()
       //   .then(function(data) {
