@@ -1,0 +1,23 @@
+{
+  "name": "ibm-hackathon",
+  "description": "",
+  "main": "app.module.js",
+  "authors": [
+    "Caique Caleiro <caiquecaleiro@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/caiquecaleiro/ibm-hackathon",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "^1.5.8",
+    "bootstrap": "^3.3.7",
+    "angular": "^1.5.8"
+  }
+}
