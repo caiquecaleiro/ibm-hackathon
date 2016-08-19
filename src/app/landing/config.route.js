@@ -2,18 +2,15 @@
   'use strict';
 
   angular
-    .module('app', [
-      'ngRoute',
-      'app.landing'
-    ])
+    .module('app.landing')
     .config(configFunction);
 
   configFunction.$inject = ['$routeProvider'];
 
   function configFunction($routeProvider) {
     $routeProvider
-      .otherwise({
-        redirectTo: '/'
-      });
-  }
+      .when('/', {
+        templateUrl: 'app/landing/landing.html'
+     });
+   }
 })();
