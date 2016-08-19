@@ -4,7 +4,8 @@
   angular
     .module('app', [
       'ngRoute',
-      'app.landing'
+      'app.landing',
+      'app.converter'
     ])
     .config(configFunction);
 

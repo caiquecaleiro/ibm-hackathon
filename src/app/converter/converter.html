@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="col-sm-6 col-sm-offset-3 text-center">
+      <h3>Busca por palavras chaves</h3>
+      <div class="col-sm-12">
+        <form name="converterForm" ng-submit="vm.submitAction(vm.url, vm.keyword)" novalidate>
+          <div class="form-group">
+            <input name="palavra" ng-model="vm.keyword" class="form-control" placeholder="Palavras-chaves"/>
+          </div>
+          <div class="form-group col-md-4 col-md-offset-4">
+            <button class="btn btn-block btn-success" type="submit">Pesquisar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div>
+      <ul class="list-unstyled video-list-thumbs row">
+        <li class="col-lg-3 col-sm-4 col-xs-6">
+          <a href="#" title="Vídeo 1">
+            <img src="http://i.ytimg.com/vi/ZKOtE9DOwGE/mqdefault.jpg" alt="Vídeo 1" class="img-responsive" height="130px" />
+            <h2>Palavras em Inglês</h2>
+            <span class="glyphicon glyphicon-play-circle"></span>
+            <span class="duration">03:15</span>
+          </a>
+        </li>
+        </li>
+        <li class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+          <a href="#" title="Vídeo 2">
+          <img src="http://i.ytimg.com/vi/ZKOtE9DOwGE/mqdefault.jpg" alt="Vídeo 2" class="img-responsive" height="130px" />
+          <h2>Palavras em Português</h2>
+          <span class="glyphicon glyphicon-play-circle"></span>
+          <span class="duration">01:15</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
