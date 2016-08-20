@@ -10,7 +10,9 @@ var videosRoute = function(router){
 var setVideosRoutes = function(){
   this.router.get('/videos', function(req, res) {
 		var response = [];
-    fs.readdirSync(__base + '../videos/').filter(file => file.split('.')[1] === 'mp4').forEach(file => response.push("/videos/" + file));
+    fs.readdirSync(__base + '../videos/')
+			.filter(file => file.split('.')[1] === 'mp4') //only mp4 video format
+			.forEach(file => response.push({path: "/videos/" + file, id: file.split('.')[0]}));
     res.send(response);
   });
 };
