@@ -45,15 +45,7 @@ var setSpeechRoutes = function(){
 
 		function goWatson() {
 			try {
-				watsonStream(path.join(file), req.body).then(function(results){
-					fs.writeFile(jsonFile, JSON.stringify(results), function(err) {
-						if (err) {
-							console.log("Error on write json file");
-							console.error(err);
-						}
-						return prepareResult(results);
-					});
-				}, (err) => res.status(500).send(err));
+				watsonStream(path.join(file), req.body).then(prepareResult, (err) => res.status(500).send(err));
 			} catch (e) {
 				return res.status(500).send(e);
 			}

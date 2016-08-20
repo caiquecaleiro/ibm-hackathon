@@ -1,7 +1,5 @@
 node_modules/
-audios/*
 temp/*
-videos/*
-bower_components
+public/src/bower_components
 node_modules
 dist
