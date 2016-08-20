@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <title>IBM - Hackathon</title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="content/css/app.css">
+  </head>
+
+  <body>
+    <div ng-view class="container"></div>
+
+    <!-- jQuery -->
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <!-- Bootstrap -->
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <!-- Angular -->
+    <script src="../bower_components/angular/angular.js"></script>
+    <!-- Angular-Route -->
+    <script src="../bower_components/angular-route/angular-route.js"></script>
+
+    <!-- app module -->
+    <script src="app/app.module.js"></script>
+    <!-- landing module -->
+    <script src="app/landing/landing.module.js"></script>
+    <script src="app/landing/config.route.js"></script>
+    <!-- converter module -->
+    <script src="app/converter/converter.module.js"></script>
+    <script src="app/converter/converter.controller.js"></script>
+    <script src="app/converter/config.route.js"></script>
+    <script src="app/converter/converter.service.js"></script>
+  </body>
+</html>
