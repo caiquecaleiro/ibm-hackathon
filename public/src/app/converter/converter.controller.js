@@ -14,10 +14,12 @@
     vm.keyword = '';
     vm.videos = [];
     vm.keywords = [];
+    vm.setCurrentTime = setCurrentTime;
 
     createVideos();
 
     function submitAction(url, keywords) {
+
       keywords = keywords.replace(/\s*,\s*/g, ',');
       var json = {
         'keywords': keywords.split(',')
@@ -26,13 +28,24 @@
       createKeywords(json);
     }
 
+    function setCurrentTime(id, time) {
+      var vid = document.getElementById(id);
+      vid.currentTime = time -1 > 0 ? time -1 :  time;
+    }
+
     function createKeywords(keywords) {
-      converterService.getKeywords(keywords, vm.videos)
-        .then(function(data) {
-          vm.keywords = data;
-        });
-      // var vid = document.getElementById("myVideo");
-      // vid.currentTime = 5;
+      vm.videos.forEach(function(video) {
+        video.isLoading = true;
+        video.keywords = [];
+        converterService.getKeywords(keywords, video.id)
+          .then(function(data) {
+            video.isLoading = false;
+            video.loaded = true;
+            video.keywords = data;
+          }, function(error) {
+            console.log(error);
+          });
+      });
     }
 
     function createVideos() {

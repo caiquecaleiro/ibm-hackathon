@@ -14,28 +14,27 @@
     };
     return service;
 
-    function getKeywords(keywords, videos) {
+    function getKeywords(keywords, video) {
       var deferred = $q.defer();
-      videos.forEach(function(object) {
-        $http.post('http://localhost:8080/api/speech/' + object.id, keywords)
-          .success(function(data) {
-            var keywords = [];
-            for (var object in data) {
-              data[object].forEach(function(word) {
-                var keyword = new Keyword(
-
-                  word.normalized_text,
-                  word.start_time
-                );
-                keywords.push(keyword);
-              });
-            }
-            deferred.resolve(keywords);
-          })
-          .catch(function(error) {
-            deferred.reject(error);
-          });
-      });
+      $http.post('http://localhost:8080/api/speech/' + video, keywords)
+        .then(function(data) {
+          var dt = data.data;
+          if(JSON.stringify(dt) === JSON.stringify({}))
+            deferred.resolve([]);
+          var keywords = [];
+          for (var object in dt) {
+            dt[object].forEach(function(word) {
+              var keyword = new Keyword(
+                word.normalized_text,
+                word.start_time
+              );
+              keywords.push(keyword);
+            });
+          }
+          deferred.resolve(keywords);
+        }, function(error) {
+          deferred.reject(error);
+        });
       return deferred.promise;
     }
 

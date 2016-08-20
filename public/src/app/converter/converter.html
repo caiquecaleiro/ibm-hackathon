@@ -1,6 +1,9 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="col-sm-6 col-sm-offset-3 text-center">
+      <div>
+        <img src="content/img/logo.png" alt="logo" width="100" height="100"/>
+      </div>
       <h3>Buscar por palavras chave</h3>
       <div class="col-sm-12">
         <form name="converterForm" ng-submit="vm.submitAction(vm.url, vm.keyword)" novalidate>
@@ -18,14 +21,19 @@
 <div class="row">
   <div class="col-md-12" style="margin-top: 30px">
     <ul class="list-unstyled video-list-thumbs row">
-      <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6" ng-repeat="video in vm.videos">
-        <h2>{{ video.title }}</h2>
-        <video  title="{{ video.title }}" alt="{{ video.title }}" width="320" height="185" controls>
-          <source src="{{ video.url }}" type="video/mp4">
+      <li class="col-lg-4 col-md-4 col-sm-6 col-xs-12" ng-repeat="video in vm.videos">
+        <h2>
+          {{ video.title }}
+          <i style="color: blue;" class="fa fa-spinner" ng-if="video.isLoading"></i>
+          <i style="color: red;" class="fa fa-times" ng-if="!video.isLoading && video.loaded && !video.keywords.length"></i>
+          <i style="color: green;" class="fa fa-check" ng-if="!video.isLoading && video.loaded && video.keywords.length"></i>
+        </h2>
+        <video id="{{video.id}}" title="{{ video.title }}" alt="{{ video.title }}" style="width: 100%;" height="185" controls>
+          <source ng-src="{{ video.url }}" type="video/mp4">
           O seu navegador não suporta este vídeo.
         </video>
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="keyword in vm.keywords" ng-click="vm.setCurrentTime()">
+        <ul class="list-group" width="320">
+          <li class="list-group-item" style="cursor: pointer;" ng-repeat="keyword in video.keywords" ng-click="vm.setCurrentTime(video.id, keyword.time)">
             <span>{{ keyword.description }}</span>
             <span>{{ keyword.time }}</span>
           </li>
