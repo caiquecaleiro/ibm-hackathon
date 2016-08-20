@@ -3,3 +3,4 @@ temp/*
 public/src/bower_components
 node_modules
 dist
+audios/*.json
