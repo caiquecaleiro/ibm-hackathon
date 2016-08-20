@@ -1,29 +1,33 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="col-sm-6 col-sm-offset-3 text-center">
-      <h3>Busca por palavras chaves</h3>
+      <h3>Busca por palavras chave</h3>
       <div class="col-sm-12">
         <form name="converterForm" ng-submit="vm.submitAction(vm.url, vm.keyword)" novalidate>
           <div class="form-group">
-            <input name="palavra" ng-model="vm.keyword" class="form-control" placeholder="Palavras-chaves"/>
+            <input name="palavra" ng-model="vm.keyword" class="form-control" placeholder="Palavras chave"/>
           </div>
-          <div class="form-group col-md-4 col-md-offset-4">
+          <div class="form-group col-xs-4 col-xs-offset-4 col-md-4 col-md-offset-4">
             <button class="btn btn-block btn-success" type="submit">Pesquisar</button>
           </div>
         </form>
       </div>
     </div>
-    <div>
-      <ul class="list-unstyled video-list-thumbs row">
-        <li ng-repeat="video in vm.videos" class="col-lg-3 col-sm-4 col-xs-6">
-          <a href="#" title="{{ video.title }}">
-            <img ng-src="{{ video.image }}" alt="{{ video.title }}" class="img-responsive" height="130px" />
-            <h2>{{ video.title }}</h2>
-            <span class="glyphicon glyphicon-play-circle"></span>
-            <span class="duration">{{ video.time }}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12" style="margin-top: 30px">
+    <ul class="list-unstyled video-list-thumbs row">
+      <li class="col-lg-3 col-sm-4 col-xs-6" ng-repeat="video in vm.videos">
+        <h2>{{ video.title }}</h2>
+        <video id="myVideo" title="{{ video.title }}" alt="{{ video.title }}" width="320" height="185" controls>
+          <source src="./app/converter/video1.mp4" type="video/mp4">
+          O seu navegador não suporta este vídeo.
+        </video>
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="keyword in vm.keywords" ng-click="vm.setCurrentTime()">{{ keyword.description }}</li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </div>
