@@ -49,16 +49,11 @@ var watsonSpeechToText = function(audioFile, options) {
       }
     });
 
-    recognizeStream.on('data', function(data) {
-      console.log(data);
-    });
-
     recognizeStream.on('error', function(err) {
       errors.push(err);
     });
 
     recognizeStream.on('close', function() {
-      console.log('CLOSE');
       if(errors.length)
         return reject(errors);
 

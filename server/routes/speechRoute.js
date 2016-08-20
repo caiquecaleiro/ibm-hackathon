@@ -21,6 +21,8 @@ var setSpeechRoutes = function(){
 
 	this.router.post(speechId, function(req, res){
 		var file = [__base, '../audios/', req.params.url + '.wav'].join('');
+		var fileFlac = [__base, '../audios/', req.params.url + '.flac'].join('');
+
 		var jsonFile = path.join(__base, '../audios/', req.params.url + '.json');
 
 		if(!req.body.keywords || !req.body.keywords.length) {
@@ -45,24 +47,22 @@ var setSpeechRoutes = function(){
 
 		function goWatson() {
 			try {
-				watsonStream(path.join(file), req.body).then(function(results){
-					fs.writeFile(jsonFile, JSON.stringify(results), function(err) {
-						if (err) {
-							console.log("Error on write json file");
-							console.error(err);
-						}
-						return prepareResult(results);
-					});
-				}, (err) => res.status(500).send(err));
+				watsonStream(path.join(file), req.body).then(prepareResult, (err) => res.status(500).send(err));
 			} catch (e) {
 				return res.status(500).send(e);
 			}
 		}
-		fs.existsSync(file) ? goWatson() : youtube.getYouTubeAudio(req.params.url).then(goWatson);
-		// if(fs.existsSync(jsonFile)) {
-		// 	return prepareResult(JSON.parse(fs.readFileSync(jsonFile)));
-		// } else {
-		// }
+		if(fs.existsSync(file)) {
+			goWatson();
+		} else if (fs.existsSync(fileFlac)) {
+			req.body.content_type = "audio/flac";
+			file = fileFlac;
+			goWatson();
+		} else {
+			req.body.content_type = "audio/flac";
+			file = fileFlac;
+			youtube.getYouTubeAudio(req.params.url).then(goWatson);
+		}
 	});
 
   this.router.post(speech, function(req, res){
