@@ -1,9 +1,16 @@
 'use strict';
 global.__base = __dirname + '/server/';
+global.__credentials = {};
 
 var express = require('express');
 var bodyParser = require('body-parser');
 var http = require('http');
+var fs = require('fs');
+
+__credentials = JSON.parse(fs.readFileSync('credentials.json'));
+if(!__credentials.username || !__credentials.password) {
+  throw new Error("Missing IBM bluemix credential");
+}
 
 var app = express();
 
