@@ -16,15 +16,17 @@ function Recognize(audioFile, options, callback) {
     audio: fs.createReadStream(audioFile),
     'content_type': 'audio/flac',
     model: options.model || 'pt-BR_BroadbandModel',
-    'interim_results': true,
-    'continuous': true,
-    'word_confidence': true,
-    'timestamps': true,
-    'max_alternatives': 3,
-    'inactivity_timeout': 600,
-    'word_alternatives_threshold': 0.05,
-    'keywords_threshold': options.threshold || 0.05,
-    'keywords': options.keywords || ['']
+    interim_results: true,
+    continuous: true,
+    word_confidence: true,
+    timestamps: true,
+    max_alternatives: 3,
+    inactivity_timeout: 600,
+    word_alternatives_threshold: 0.001,
+    keywords_threshold: options.threshold || 0.05,
+    // 'word_alternatives_keywords': options.keywords,
+    keywords: options.keywords,
+    smart_formatting: true
   };
 
   speech_to_text.recognize(params, function(error, transcript) {
@@ -36,80 +38,7 @@ function Recognize(audioFile, options, callback) {
 };
 
 module.exports = Recognize;
-
-// var watsonSpeechToText = function(audioFile) {
-//
-//   return new Promise(function(resolve, reject) {
-//
-//     var params = {
-//       content_type: 'audio/flac',
-//       timestamps: true,
-//       continuous: true,
-//       model: 'pt-BR_BroadbandModel'
-//     };
-//
-//     var results = [];
-//
-//     var util = {
-//       handleError: function(message, err) {
-//         console.log(message);
-//       }
-//     }
-//
-//     // create the stream
-//     var recognizeStream = speech_to_text.createRecognizeStream(params);
-//
-//     // pipe in some audio
-//     fs.createReadStream(audioFile).pipe(recognizeStream);
-//
-//     // Pipe out the transcription to a file.
-//     recognizeStream.pipe(fs.createWriteStream(__base + 'transcription.txt'));
-//
-//     // listen for 'data' events for just the final text
-//     // listen for 'results' events to get the raw JSON with interim results, timings, etc.
-//
-//     recognizeStream.setEncoding('utf8'); // to get strings instead of Buffers from `data` events
-//
-//     recognizeStream.on('results', function(e) {
-//       if (e.results[0].final) {
-//         results.push(e);
-//       }
-//     });
-//
-//     // ['data', 'results', 'error', 'connection-close'].forEach(function(eventName) {
-//     //   recognizeStream.on(eventName, console.log.bind(console, eventName + ' event: '));
-//     // });
-//
-//     recognizeStream.on('data', function(data) {
-//       console.log('data');
-//       console.log(data);
-//     });
-//
-//     recognizeStream.on('results', function(results) {
-//       console.log('results');
-//       console.log(results.results[0].alternatives);
-//     });
-//
-//     recognizeStream.on('error', function(err) {
-//       console.error(err);
-//       util.handleError('Error writing to transcript.json: ' + err);
-//     });
-//
-//     recognizeStream.on('connection-close', function() {
-//       console.log('Connection close');
-//     	var transcriptFile = path.join(__base, 'transcript.json');
-//
-//       fs.writeFile(transcriptFile, JSON.stringify(results), function(err) {
-//         if (err) {
-//           console.error(err);
-//           util.handleError(err);
-//         }
-//         console.log(results[0].alternatives);
-//         resolve();
-//       });
-//     });
-//   });
-// };
+// module.exports = watsonSpeechToText;
 
 // var Recognize = function(file) {
 //   return new Promise(function(resolve, reject) {

@@ -1,6 +1,7 @@
 var express = require('express');
 
 var watson = require(__base + 'youtube/watson');
+var watsonStream = require(__base + 'youtube/watsonStream');
 var youtube = require(__base + 'youtube/youtube');
 var path = require('path');
 var fs = require('fs');
@@ -18,28 +19,43 @@ var setSpeechRoutes = function(){
 	var speech = "/speech";
 	var speechId = speech + "/:url";
 
-	this.router.get(speechId, function(req, res){
-    // return res.send('Done transcribing video id: ' + req.params.url);
-		var message = 'GET in ' + speech + ' route';
-		console.log(message);
+	this.router.post(speechId, function(req, res){
 		var file = [__base, '../audios/', req.params.url + '.flac'].join('');
+		var jsonFile = path.join(__base, '../audios/', req.params.url + '.json');
+
+		var prepareResult = function(results) {
+			var compound = {};
+			results.filter(result => {
+				var compare = () => req.body.keywords.some(k => result.results[0].keywords_result[k]);
+				return JSON.stringify(result.results[0].keywords_result) !==  JSON.stringify({}) && compare();
+			})
+			.map(key => key.results[0].keywords_result)
+			.forEach(f => {
+				for(var at in f) {
+					compound[at] = compound[at] || [];
+					f[at].forEach(y => compound[at].push(y));
+				}
+			});
+			return res.send(compound);
+		}
 
 		var goWatson = function() {
-			watson(path.join(file), {keywords: ['presente']}, function(err, result) {
-				return res.send(err || result);
-			});
+			watsonStream(path.join(file), {keywords: req.body.keywords}).then(function(results){
+				fs.writeFile(jsonFile, JSON.stringify(results), function(err) {
+					if (err) {
+						console.log("Error on write json file");
+						console.error(err);
+					}
+					return prepareResult(results);
+				});
+			}, (err) => res.code(500).send(err));
 		}
 
-		if (fs.existsSync(file)) {
-			goWatson();
+		if(fs.existsSync(jsonFile)) {
+			return prepareResult(JSON.parse(fs.readFileSync(jsonFile)));
 		} else {
-			youtube.getYouTubeAudio(req.params.url).then(goWatson);
+			fs.existsSync(file) ? goWatson() : youtube.getYouTubeAudio(req.params.url).then(goWatson);
 		}
-  	// youtube.getYouTubeAudio(req.params.url)
-    // .then(watson.watsonSpeechToText.bind(this, path.join(__base, 'file.flac')))
-    // .then(function(){
-    //   res.send('Done transcribing video id: ' + req.params.url);
-    // });
 	});
 
   this.router.post(speech, function(req, res){
