@@ -5,9 +5,9 @@
     .module('app.converter')
     .factory('converterService', converterService);
 
-  converterService.$inject = ['$http', '$q'];
+  converterService.$inject = ['$http', '$q', 'SERVER'];
 
-  function converterService($http, $q) {
+  function converterService($http, $q, SERVER) {
     var service = {
       getKeywords: getKeywords,
       getVideos: getVideos
@@ -16,7 +16,7 @@
 
     function getKeywords(keywords, video) {
       var deferred = $q.defer();
-      $http.post('http://10.1.37.151:8080/api/speech/' + video, keywords)
+      $http.post(SERVER.url + '/api/speech/' + video, keywords)
         .then(function(data) {
           var dt = data.data;
           if(JSON.stringify(dt) === JSON.stringify({}))
@@ -41,7 +41,7 @@
     function getVideos() {
       var deferred = $q.defer();
       var videos = [];
-      $http.get('http://10.1.37.151:8080/api/videos')
+      $http.get(SERVER.url + '/api/videos')
         .then(function(response) {
           response.data.forEach(function(object) {
             var video = new Video(
