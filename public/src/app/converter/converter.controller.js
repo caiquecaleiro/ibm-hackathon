@@ -14,6 +14,7 @@
     vm.keyword = '';
     vm.videos = [];
     vm.keywords = [];
+    vm.searching = false;
     vm.setCurrentTime = setCurrentTime;
 
     createVideos();
@@ -34,11 +35,15 @@
     }
 
     function createKeywords(keywords) {
+      var total = vm.videos.length;
       vm.videos.forEach(function(video) {
+        vm.searching = true;
         video.isLoading = true;
         video.keywords = [];
         converterService.getKeywords(keywords, video.id)
           .then(function(data) {
+            if(--total === 0)
+              vm.searching = false;
             video.isLoading = false;
             video.loaded = true;
             video.keywords = data;

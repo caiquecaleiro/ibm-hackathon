@@ -16,7 +16,7 @@
 
     function getKeywords(keywords, video) {
       var deferred = $q.defer();
-      $http.post('http://localhost:8080/api/speech/' + video, keywords)
+      $http.post('http://10.1.37.151:8080/api/speech/' + video, keywords)
         .then(function(data) {
           var dt = data.data;
           if(JSON.stringify(dt) === JSON.stringify({}))
@@ -41,7 +41,7 @@
     function getVideos() {
       var deferred = $q.defer();
       var videos = [];
-      $http.get('http://localhost:8080/api/videos')
+      $http.get('http://10.1.37.151:8080/api/videos')
         .then(function(response) {
           response.data.forEach(function(object) {
             var video = new Video(
