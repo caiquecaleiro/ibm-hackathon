@@ -7,26 +7,22 @@ var speech_to_text = watson.speech_to_text({
   username: "0a211962-7ee3-4097-8641-64ad86518b94",
   password: "Zxnm0BDDJ6fZ",
   version: 'v1',
-  model_id: 'pt-BR_BroadbandModel',
   url: 'https://stream.watsonplatform.net/speech-to-text/api',
 });
 
 var watsonSpeechToText = function(audioFile, options) {
-
   return new Promise(function(resolve, reject) {
-
     var params = {
-      content_type: 'audio/flac',
+      content_type: options.content_type || 'audio/wav',
       timestamps: true,
       continuous: true,
-      model: 'pt-BR_BroadbandModel',
+      model: options.model || 'pt-BR_BroadbandModel',
       interim_results: true,
       word_confidence: true,
       max_alternatives: 3,
       inactivity_timeout: 600,
       word_alternatives_threshold: 1,
-      keywords_threshold: 0.05,
-      // 'word_alternatives_keywords': options.keywords,
+      keywords_threshold: options.threshold || 0.05,
       keywords: options.keywords
     };
 
@@ -40,7 +36,7 @@ var watsonSpeechToText = function(audioFile, options) {
     fs.createReadStream(audioFile).pipe(recognizeStream);
 
     // Pipe out the transcription to a file.
-    recognizeStream.pipe(fs.createWriteStream(__base + 'transcription.json'));
+    // recognizeStream.pipe(fs.createWriteStream(__base + 'transcription.json'));
 
     // listen for 'data' events for just the final text
     // listen for 'results' events to get the raw JSON with interim results, timings, etc.
@@ -51,6 +47,10 @@ var watsonSpeechToText = function(audioFile, options) {
       if (e.results[0].final) {
         results.push(e);
       }
+    });
+
+    recognizeStream.on('data', function(data) {
+      console.log(data);
     });
 
     recognizeStream.on('error', function(err) {

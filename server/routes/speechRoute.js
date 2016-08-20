@@ -20,8 +20,12 @@ var setSpeechRoutes = function(){
 	var speechId = speech + "/:url";
 
 	this.router.post(speechId, function(req, res){
-		var file = [__base, '../audios/', req.params.url + '.flac'].join('');
+		var file = [__base, '../audios/', req.params.url + '.wav'].join('');
 		var jsonFile = path.join(__base, '../audios/', req.params.url + '.json');
+
+		if(!req.body.keywords || !req.body.keywords.length) {
+				return res.status(400).send({message: 'É necessário informar palavras chaves'});
+		}
 
 		var prepareResult = function(results) {
 			var compound = {};
@@ -39,23 +43,26 @@ var setSpeechRoutes = function(){
 			return res.send(compound);
 		}
 
-		var goWatson = function() {
-			watsonStream(path.join(file), {keywords: req.body.keywords}).then(function(results){
-				fs.writeFile(jsonFile, JSON.stringify(results), function(err) {
-					if (err) {
-						console.log("Error on write json file");
-						console.error(err);
-					}
-					return prepareResult(results);
-				});
-			}, (err) => res.code(500).send(err));
+		function goWatson() {
+			try {
+				watsonStream(path.join(file), req.body).then(function(results){
+					fs.writeFile(jsonFile, JSON.stringify(results), function(err) {
+						if (err) {
+							console.log("Error on write json file");
+							console.error(err);
+						}
+						return prepareResult(results);
+					});
+				}, (err) => res.status(500).send(err));
+			} catch (e) {
+				return res.status(500).send(e);
+			}
 		}
-
-		if(fs.existsSync(jsonFile)) {
-			return prepareResult(JSON.parse(fs.readFileSync(jsonFile)));
-		} else {
-			fs.existsSync(file) ? goWatson() : youtube.getYouTubeAudio(req.params.url).then(goWatson);
-		}
+		fs.existsSync(file) ? goWatson() : youtube.getYouTubeAudio(req.params.url).then(goWatson);
+		// if(fs.existsSync(jsonFile)) {
+		// 	return prepareResult(JSON.parse(fs.readFileSync(jsonFile)));
+		// } else {
+		// }
 	});
 
   this.router.post(speech, function(req, res){

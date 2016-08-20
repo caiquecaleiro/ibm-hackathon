@@ -5,7 +5,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var http = require('http');
 
-
 var app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,6 +20,7 @@ app.all('*', function(req, res, next) {
 });
 
 app.use('/', express.static('public/src'));
+app.use('/videos', express.static('videos'));
 
 var LoadRouter = require(__base + 'routes/loadRoutes');
 app.use('/api', new LoadRouter());
